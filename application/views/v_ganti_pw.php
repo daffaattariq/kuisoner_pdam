@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-  <title>Form Login</title>
+  <title>Form Ganti Password</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   <link rel="shortcut icon" href="<?php echo base_url();?>assets/images/pdam_login.jpg">
+  <link rel="shortcut icon" href="<?php echo base_url();?>assets/images/pdam_login.jpg">
 
   <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700" rel="stylesheet">
@@ -46,26 +46,18 @@
                   <?php echo $this->session->flashdata('error');?>
                 </div>
               <?php }?>
-              <?php if ($this->session->flashdata('success')) {?>
-                  <div class="alert alert-success" role="alert">
-                  <?php echo $this->session->flashdata('success');?>
-                </div>
-              <?php }?>
-                <form method ="post" action="<?php echo base_url('login/cek_login');?>" class=" p-3 p-md-5 bg-light">
-                    <img src="<?php echo base_url();?>assets/images/pdam_login.jpg" />    
-                    <br>
-                    <br> 
+                <form method ="post" action="<?php echo base_url('login/ganti_password');?>" class=" p-3 p-md-5 bg-light">
+                   <h3>Ganti Password</h3> 
                   <div class="form-group">
-                    <input type="text" class="form-control"  name="username" placeholder="Username" required="">
+                    <input type="text" class="form-control"  name="username" value="<?php echo $username ?>" hidden>
                   </div>
                   <div class="form-group">
-                    <input type="password" class="form-control" name="password" placeholder="Password" required="">
-                  </div>         
+                    <input type="text" class="form-control"  name="password" placeholder="password" required="">
+                  </div>
+                   
                 <div class="form-group">
-                  <button type="submit"  name="login" class="btn btn-secondary btn-lg btn-block">Login</button> </div>
-                  <a href="<?php echo base_url('login/register');?>">Register</a>
-                  <br>                  
-                  <a href="<?php echo base_url('login/lupa_pw');?>">Lupa Password</a>
+                  <button type="submit"  name="login" class="btn btn-secondary btn-lg btn-block">Ganti Password</button> </div>
+                  <a href="<?php echo base_url('login');?>">Back To Login</a>
           </center>
         </div>
 

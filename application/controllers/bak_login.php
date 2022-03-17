@@ -114,7 +114,7 @@ class Login extends CI_Controller {
         // var_dump($cek);die();
         if($cek != null)
         {   
-            $ambil_data['username'] = $username;
+
             //EMAIL BARU
             $config = [
                 'mailtype'  => 'html',
@@ -134,16 +134,47 @@ class Login extends CI_Controller {
             // Email dan nama pengirim
             $this->email->from('no-reply@masrud.com', 'MasRud.com');    
             // Email penerima
-            $this->email->to($cek['email']); // Ganti dengan email tujuan
+            $this->email->to('penerima@domain.com'); // Ganti dengan email tujuan
             // Subject email
             $this->email->subject('Reset Password');    
             // Isi email
-            $this->email->message("Ini Token ". $cek['token']);    
+            $this->email->message("Ini Token");    
             // Tampilkan pesan sukses atau error
             if ($this->email->send()) {
                 echo 'Sukses! email berhasil dikirim.';
             } 
-           
+            //PROTOKOL EMAIL
+            $config['protocol']='smtp';
+            $config['smtp_host']='ssl://smtp.gmail.com';
+            $config['smtp_port']='465';
+            $config['smtp_timeout']='30';
+            $config['smtp_user']='daffaattariq19@gmail.com';
+            $config['smtp_pass']='avon240970';
+            $config['charset']='utf-8';
+            $config['newline']="\r\n";
+            $config['wordwrap'] = TRUE;
+            $config['mailtype'] = 'html';
+            
+            $this->email->initialize($config);
+
+
+            $ambil_data['username'] = $username;
+
+            //send Email
+            // $from_email = "frans@idnplay.com";
+            // $to_email = $this->input->post('email');
+            $from_email = "daffaattariq19@gmail.com";
+            $to_email = "daffaattariq19@gmail.com";
+
+            $this->email->from($from_email, 'Identification');
+            $this->email->to($to_email);
+            $this->email->subject('Send Email Codeigniter');
+            $this->email->message('The email send using codeigniter library');
+            $this->email->send();
+
+            var_dump($this->email->print_debugger());die();
+            var_dump($this->email->send());die();
+
             $this->load->view('v_ganti_pw' , $ambil_data);	      
         }
         else

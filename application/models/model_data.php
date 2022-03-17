@@ -5,6 +5,7 @@ class Model_Data extends CI_Model
 		function insert($data,$table)
 		{
 			return $this->db->insert($table,$data);
+			// print_r($this->db->last_query());
 		}
 		function cek($where,$table)
 		{
@@ -16,296 +17,165 @@ class Model_Data extends CI_Model
 			$query = $this->db->get_where($table,$where);
 			return $query->row_array();
 		}
-		function ambil_data_varian ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('varian');
-			$this->db->join('produk','produk.id_produk=varian.id_produk');		
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=varian.id_wilayah_distributor');
-			$this->db->where($where);
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			// print_r($this->db->last_query()); 
-			return $data;
-		}
-		
-		function ambil_data_loading_barang ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('loading_barang');
-			$this->db->join('sales','sales.id_sales=loading_barang.id_sales');		
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=loading_barang.id_wilayah_distributor');
-			$this->db->where($where);
-			$this->db->order_by('tgl_loading','desc');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			// print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_detail_loading ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('loading_barang');
-			$this->db->join('sales','sales.id_sales=loading_barang.id_sales');		
-			$this->db->join('detail_loading','detail_loading.id_loading=loading_barang.id_loading');
-			$this->db->join('varian','varian.id_varian=detail_loading.id_varian');
-			$this->db->join('produk','produk.id_produk=varian.id_produk');	
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=loading_barang.id_wilayah_distributor');
-			$this->db->where($where);
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_penjualan_varian ($where)
-		{
-			$this->db->select('detail_loading.id_detail_loading , nama_wilayah , produk.nama_produk, varian.jenis_varian , sum(detail_loading.jumlah_pesanan) as total');
-			$this->db->from('loading_barang');			
-			$this->db->join('detail_loading','detail_loading.id_loading=loading_barang.id_loading');
-			$this->db->join('varian','varian.id_varian=detail_loading.id_varian');
-			$this->db->join('produk','produk.id_produk=varian.id_produk');	
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=loading_barang.id_wilayah_distributor');
-			$this->db->where($where);
-			$this->db->group_by('detail_loading.id_varian');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			// print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_sales ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('sales');				
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=sales.id_wilayah_distributor');
-			$this->db->where($where);
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_produk($where_produk)
-		{
-			$query = $this->db->get_where('produk',$where_produk);			
-			return $query->result_array();
-		}
+
+	
 		function ambil_data_where($table,$where_produk)
 		{
-			$query = $this->db->get_where($table,$where_produk);			
+			$query = $this->db->get_where($table,$where_produk);
+			// print_r($this->db->last_query());			
 			return $query->result_array();
+			 
 		}
-		function delete_varian($where,$table)
-		{
-			$this->db->where($where);
-			$this->db->delete($table);
-		}
+
 		function ambil_data_result($table)
 		{
 			$query = $this->db->get($table);
 			return $query->result_array();
 		}
+
+		function ambil_data_pertanyaan ()
+		{
+			$this->db->select('*');
+			$this->db->from('pertanyaan');			
+			$this->db->join('kategori_pertanyaan','kategori_pertanyaan.id_kategori=pertanyaan.id_kategori');
+			$this->db->order_by('kategori_pertanyaan.id_kategori','asc');		
+			$query=$this->db->get();			
+			$data= $query->result_array();
+			// print_r($data);
+			// print_r($this->db->last_query()); 
+			return $data;
+		}
+
+		function ambil_data_jawaban ()
+		{
+			$this->db->select('*');
+			$this->db->from('pertanyaan');			
+			$this->db->join('kategori_pertanyaan','kategori_pertanyaan.id_kategori=pertanyaan.id_kategori');
+			$this->db->join('jawaban','jawaban.id_pertanyaan=pertanyaan.id_pertanyaan');	
+			$this->db->join('login','login.id_login=jawaban.id_login');		
+			$query=$this->db->get();			
+			$data= $query->result_array();
+			// print_r($data);
+			//print_r($this->db->last_query()); 
+			return $data;
+		}
+
+		function ambil_data_kritik_saran ()
+		{
+			$this->db->select('*');
+			$this->db->from('kritik_saran');			
+			$this->db->join('kategori_pertanyaan','kategori_pertanyaan.id_kategori=kritik_saran.id_kategori');			
+			$this->db->join('login','login.id_login=kritik_saran.id_login');		
+			$query=$this->db->get();			
+			$data= $query->result_array();
+			// print_r($data);
+			//print_r($this->db->last_query()); 
+			return $data;
+		}
+
+		function ambil_data_hasil ()
+		{
+			$this->db->select('count(jawaban) as jumlah , jawaban ,count(jawaban)*jawaban as kali , kategori_pertanyaan.kode_kategori as kode_kategori' );
+			$this->db->from('pertanyaan');			
+			$this->db->join('kategori_pertanyaan','kategori_pertanyaan.id_kategori=pertanyaan.id_kategori');
+			$this->db->join('jawaban','jawaban.id_pertanyaan=pertanyaan.id_pertanyaan');	
+			$this->db->join('login','login.id_login=jawaban.id_login');		
+			$this->db->group_by('pertanyaan.id_kategori' );
+			$this->db->group_by('jawaban.jawaban' );
+			$query=$this->db->get();			
+			$data= $query->result_array();
+			// print_r($data);
+			// print_r($this->db->last_query()); 
+			return $data;
+		}
+
+		function ambil_data_sudah_isi_jawaban ()
+		{
+			$this->db->select('*' );
+			$this->db->from('pertanyaan');			
+			$this->db->join('kategori_pertanyaan','kategori_pertanyaan.id_kategori=pertanyaan.id_kategori');
+			$this->db->join('jawaban','jawaban.id_pertanyaan=pertanyaan.id_pertanyaan');	
+			$this->db->join('login','login.id_login=jawaban.id_login');		
+			$this->db->group_by('login.id_login' );
+			$query=$this->db->get();			
+			$data= $query->result_array();
+			// print_r($data);
+			// print_r($this->db->last_query()); 
+			return $data;
+		}
+
+		function ambil_data_belum_isi_jawaban()
+		{
+			$query = $this->db->query("SELECT * FROM `login` 
+										left OUTER JOIN jawaban
+										on  jawaban.id_login = login.id_login
+										where jawaban.id_login is null and login.level != 2");
+			$data = $query->result_array();
+			// print_r($this->db->last_query()); 
+			return $data;
+		}
+
+		// function ambil_data_kesimpulan($id_kategori)
+		// {
+		// 	$query = $this->db->query("SELECT pertanyaan.id_kategori as id_kategori, count(jawaban.jawaban) as jumlah_jawaban , jawaban as id_jawaban FROM `pertanyaan` 
+		// 	JOIN `kategori_pertanyaan` 
+		// 	ON `kategori_pertanyaan`.`id_kategori`=`pertanyaan`.`id_kategori` 
+		// 	JOIN `jawaban` 
+		// 	ON `jawaban`.`id_pertanyaan`=`pertanyaan`.`id_pertanyaan` 
+		// 	JOIN `login` 
+		// 	ON `login`.`id_login`=`jawaban`.`id_login`
+		// 	where pertanyaan.id_kategori = '$id_kategori'
+		// 	group by  pertanyaan.id_kategori , jawaban.jawaban");
+		// 	$data = $query->result_array();
+		// 	// print_r($this->db->last_query()); 
+		// 	return $data;
+		// }
+
+
+		function ambil_data_jawaban_where ($where)
+		{
+			$this->db->select('*');
+			$this->db->from('pertanyaan');			
+			$this->db->join('kategori_pertanyaan','kategori_pertanyaan.id_kategori=pertanyaan.id_kategori');
+			$this->db->join('jawaban','jawaban.id_pertanyaan=pertanyaan.id_pertanyaan');	
+			$this->db->join('login','login.id_login=jawaban.id_login');		
+			$this->db->where($where);
+			$query=$this->db->get();			
+			$data= $query->result_array();
+			// print_r($data);
+			// print_r($this->db->last_query()); 
+			return $data;
+		}
+
 		function edit_data($where,$data,$table)
 		{		
 			$this->db->where($where);
 			$this->db->update($table,$data);
+			print_r($this->db->last_query()); 
 			
 		}
 		function delete_data($where,$table)
 		{
 			$this->db->where($where);
 			$this->db->delete($table);
-		}
-
-		//PERAMALAN
-		function ambil_data_peramalan($tgl_input , $list_id_varian, $tgl_calculated , $id_wilayah_distributor)
-		{
-			
-
-			$sql = "SELECT `detail_loading`.`id_detail_loading`, `produk`.`nama_produk`, 
-			`varian`.`jenis_varian`, sum(detail_loading.jumlah_pesanan) as total , 
-			YEAR(loading_barang.tgl_loading) as year , MONTH(loading_barang.tgl_loading) as month 
-			FROM `loading_barang` 
-			JOIN `detail_loading` ON `detail_loading`.`id_loading`=`loading_barang`.`id_loading` 
-			JOIN `varian` ON `varian`.`id_varian`=`detail_loading`.`id_varian` 
-			JOIN `produk` ON `produk`.`id_produk`=`varian`.`id_produk` 
-			JOIN `wilayah_distributor` ON `wilayah_distributor`.`id_wilayah_distributor`=`loading_barang`.`id_wilayah_distributor` 
-			WHERE loading_barang.tgl_calculated 
-			BETWEEN Date_format(DATE_ADD('$tgl_input', INTERVAL -9 MONTH),'%Y%m') AND '$tgl_calculated' 
-			AND `loading_barang`.`id_wilayah_distributor` = $id_wilayah_distributor 
-			AND `loading_barang`.`is_deleted` = 0 
-			AND `varian`.`id_varian`= $list_id_varian 
-			GROUP BY `detail_loading`.`id_varian` , YEAR(loading_barang.tgl_loading ) ,MONTH(loading_barang.tgl_loading)";
-			$result = $this->db->query($sql);
-			$data= $result->result_array();
 			// print_r($this->db->last_query()); 
-			return $data;
 		}
 
-		function ambil_data_chart_penjualan($tgl_awal ,$tgl_akhir , $id_wilayah_distributor , $list_id_varian)
+		function truncate_data($table)
 		{
-
-			$sql = "SELECT * FROM `data_chart` 
-			WHERE tgl_calculated BETWEEN $tgl_awal and $tgl_akhir 
-			and id_wilayah_distributor = $id_wilayah_distributor 
-			and id_varian = $list_id_varian";
-
-			$result = $this->db->query($sql);
-			$data= $result->result_array();
-			print_r($this->db->last_query()); 
-			return $data;
+			$this->db->truncate($table);
+			// print_r($this->db->last_query()); 
 		}
 
-		// function ambil_data_peramalan($tgl_input , $list_id_varian)
-		// {
-			
+		//JAWABAN
+		//cek apakah ada jawaban atau tidak
+		
+	
 
-		// 	$sql = "SELECT `detail_loading`.`id_detail_loading`, `produk`.`nama_produk`, `varian`.`jenis_varian`, sum(detail_loading.jumlah_pesanan) as total ,
-		// 	YEAR(loading_barang.tgl_loading) as year , MONTH(loading_barang.tgl_loading) as month
-		// 	FROM `loading_barang` 
-		// 	JOIN `detail_loading` ON `detail_loading`.`id_loading`=`loading_barang`.`id_loading` 
-		// 	JOIN `varian` ON `varian`.`id_varian`=`detail_loading`.`id_varian` 
-		// 	JOIN `produk` ON `produk`.`id_produk`=`varian`.`id_produk` 
-		// 	JOIN `wilayah_distributor` ON `wilayah_distributor`.`id_wilayah_distributor`=`loading_barang`.`id_wilayah_distributor` 
-		// 	WHERE loading_barang.tgl_loading 
-		// 	BETWEEN DATE_ADD('$tgl_input', INTERVAL -11 MONTH) AND '$tgl_input'
-		// 	AND `loading_barang`.`id_wilayah_distributor` = '1' AND `loading_barang`.`is_deleted` = 0 
-		// 	AND `varian`.`id_varian`= $list_id_varian
-		// 	GROUP BY `detail_loading`.`id_varian` , YEAR(loading_barang.tgl_loading ) ,MONTH(loading_barang.tgl_loading)";
-		// 	$result = $this->db->query($sql);
-		// 	$data= $result->result_array();
-		// 	print_r($this->db->last_query()); 
-		// 	return $data;
-		// }
 
-		//AKSI LOG
-		function ambil_data_log_varian ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('varian');
-			$this->db->join('produk','produk.id_produk=varian.id_produk');		
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=varian.id_wilayah_distributor');
-			$this->db->join('log_varian','log_varian.id_varian=varian.id_varian');		
-			$this->db->where($where);
-			$this->db->order_by('tgl_aksi','desc');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_log_sales ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('sales');				
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=sales.id_wilayah_distributor');
-			$this->db->join('log_sales','log_sales.id_sales=sales.id_sales');	
-			$this->db->where($where);
-			$this->db->order_by('tgl_aksi','desc');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_log_varian_all ()
-		{
-			$this->db->select('*');
-			$this->db->from('varian');
-			$this->db->join('produk','produk.id_produk=varian.id_produk');		
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=varian.id_wilayah_distributor');
-			$this->db->join('log_varian','log_varian.id_varian=varian.id_varian');		
-			$this->db->order_by('tgl_aksi','desc');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_log_sales_all ()
-		{
-			$this->db->select('*');
-			$this->db->from('sales');				
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=sales.id_wilayah_distributor');
-			$this->db->join('log_sales','log_sales.id_sales=sales.id_sales');	
-			$this->db->order_by('tgl_aksi','desc');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_log_loading ($where)
-		{
-			$this->db->select('*');			
-			$this->db->from('loading_barang');
-			$this->db->join('sales','sales.id_sales=loading_barang.id_sales');		
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=loading_barang.id_wilayah_distributor');			
-			$this->db->join('log_loading','log_loading.id_loading=loading_barang.id_loading');		
-			$this->db->where($where);
-			$this->db->order_by('tgl_aksi','desc');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
+		//pertanyaan
+		
 
-		//AKSI RECENT DELETE
-
-		function ambil_data_recent_delete_varian ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('varian');
-			$this->db->join('produk','produk.id_produk=varian.id_produk');		
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=varian.id_wilayah_distributor');
-			$this->db->join('log_varian','log_varian.id_varian=varian.id_varian');		
-			$this->db->where($where);
-			$this->db->group_by('varian.id_varian');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_recent_delete_sales ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('sales');				
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=sales.id_wilayah_distributor');
-			$this->db->join('log_sales','log_sales.id_sales=sales.id_sales');	
-			$this->db->where($where);
-			$this->db->group_by('sales.id_sales');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		function ambil_data_recent_delete_loading ($where)
-		{
-			$this->db->select('*');
-			$this->db->from('loading_barang');
-			$this->db->join('sales','sales.id_sales=loading_barang.id_sales');		
-			$this->db->join('wilayah_distributor','wilayah_distributor.id_wilayah_distributor=loading_barang.id_wilayah_distributor');			
-			$this->db->join('log_loading','log_loading.id_loading=loading_barang.id_loading');		
-			$this->db->where($where);			
-			$this->db->group_by('loading_barang.id_loading');
-			$this->db->order_by('tgl_aksi','desc');
-			$query=$this->db->get();			
-			$data= $query->result_array();
-			// print_r($data);
-			print_r($this->db->last_query()); 
-			return $data;
-		}
-		// function ambil_data_where($where,$table)
-		// {
-		// 	$query = $this->db->get_where($table,$where);
-		// 	return $query->result_array();
-        // }
 }
 
 ?>
